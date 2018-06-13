@@ -1,20 +1,22 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.11
--- http://www.phpmyadmin.net
+-- version 4.8.0.1
+-- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 12. Jun 2018 um 10:19
--- Server Version: 5.6.21
--- PHP-Version: 5.6.3
+-- Erstellungszeit: 13. Jun 2018 um 09:50
+-- Server-Version: 10.1.32-MariaDB
+-- PHP-Version: 7.2.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Datenbank: `library`
@@ -26,19 +28,18 @@ SET time_zone = "+00:00";
 -- Tabellenstruktur für Tabelle `author`
 --
 
-CREATE TABLE IF NOT EXISTS `author` (
+CREATE TABLE `author` (
   `AuthorID` int(11) NOT NULL,
-  `FirstName` varchar(50) DEFAULT NULL,
-  `LastName` varchar(50) DEFAULT NULL
+  `fullName` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `author`
 --
 
-INSERT INTO `author` (`AuthorID`, `FirstName`, `LastName`) VALUES
-(1, 'Denis', 'Schuele'),
-(2, 'Isabel', 'Westenberger');
+INSERT INTO `author` (`AuthorID`, `fullName`) VALUES
+(1, 'Franz Huber'),
+(2, 'Melanie Meier');
 
 -- --------------------------------------------------------
 
@@ -46,7 +47,7 @@ INSERT INTO `author` (`AuthorID`, `FirstName`, `LastName`) VALUES
 -- Tabellenstruktur für Tabelle `book`
 --
 
-CREATE TABLE IF NOT EXISTS `book` (
+CREATE TABLE `book` (
   `BookID` int(11) NOT NULL,
   `fk_OwnerID` int(11) NOT NULL,
   `fk_AuthorID` int(11) NOT NULL,
@@ -78,7 +79,7 @@ INSERT INTO `book` (`BookID`, `fk_OwnerID`, `fk_AuthorID`, `fk_GenreID`, `Title`
 -- Tabellenstruktur für Tabelle `genre`
 --
 
-CREATE TABLE IF NOT EXISTS `genre` (
+CREATE TABLE `genre` (
   `GenreID` int(11) NOT NULL,
   `Category` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -101,19 +102,18 @@ INSERT INTO `genre` (`GenreID`, `Category`) VALUES
 -- Tabellenstruktur für Tabelle `owner`
 --
 
-CREATE TABLE IF NOT EXISTS `owner` (
+CREATE TABLE `owner` (
   `OwnerID` int(11) NOT NULL,
-  `FirstName` varchar(50) DEFAULT NULL,
-  `LastName` varchar(50) DEFAULT NULL
+  `fullName` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `owner`
 --
 
-INSERT INTO `owner` (`OwnerID`, `FirstName`, `LastName`) VALUES
-(1, 'Dominic', 'Wieser'),
-(2, 'Patrick', 'Klostermann');
+INSERT INTO `owner` (`OwnerID`, `fullName`) VALUES
+(1, 'Patrick Klostermann'),
+(2, 'Dominic Wieser');
 
 --
 -- Indizes der exportierten Tabellen
@@ -123,25 +123,28 @@ INSERT INTO `owner` (`OwnerID`, `FirstName`, `LastName`) VALUES
 -- Indizes für die Tabelle `author`
 --
 ALTER TABLE `author`
- ADD PRIMARY KEY (`AuthorID`);
+  ADD PRIMARY KEY (`AuthorID`);
 
 --
 -- Indizes für die Tabelle `book`
 --
 ALTER TABLE `book`
- ADD PRIMARY KEY (`BookID`), ADD KEY `fk_OwnerID` (`fk_OwnerID`), ADD KEY `fk_AuthorID` (`fk_AuthorID`), ADD KEY `fk_GenreID` (`fk_GenreID`);
+  ADD PRIMARY KEY (`BookID`),
+  ADD KEY `fk_OwnerID` (`fk_OwnerID`),
+  ADD KEY `fk_AuthorID` (`fk_AuthorID`),
+  ADD KEY `fk_GenreID` (`fk_GenreID`);
 
 --
 -- Indizes für die Tabelle `genre`
 --
 ALTER TABLE `genre`
- ADD PRIMARY KEY (`GenreID`);
+  ADD PRIMARY KEY (`GenreID`);
 
 --
 -- Indizes für die Tabelle `owner`
 --
 ALTER TABLE `owner`
- ADD PRIMARY KEY (`OwnerID`);
+  ADD PRIMARY KEY (`OwnerID`);
 
 --
 -- Constraints der exportierten Tabellen
@@ -151,9 +154,10 @@ ALTER TABLE `owner`
 -- Constraints der Tabelle `book`
 --
 ALTER TABLE `book`
-ADD CONSTRAINT `book_ibfk_1` FOREIGN KEY (`fk_OwnerID`) REFERENCES `owner` (`OwnerID`),
-ADD CONSTRAINT `book_ibfk_2` FOREIGN KEY (`fk_AuthorID`) REFERENCES `author` (`AuthorID`),
-ADD CONSTRAINT `book_ibfk_3` FOREIGN KEY (`fk_GenreID`) REFERENCES `genre` (`GenreID`);
+  ADD CONSTRAINT `book_ibfk_1` FOREIGN KEY (`fk_OwnerID`) REFERENCES `owner` (`OwnerID`),
+  ADD CONSTRAINT `book_ibfk_2` FOREIGN KEY (`fk_AuthorID`) REFERENCES `author` (`AuthorID`),
+  ADD CONSTRAINT `book_ibfk_3` FOREIGN KEY (`fk_GenreID`) REFERENCES `genre` (`GenreID`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
